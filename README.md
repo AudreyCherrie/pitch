@@ -44,3 +44,6 @@ Db
 * [Google fonts](https://fonts.google.com/)
 * HTML
 * CSS
+
+## license
+This project is under the MIT license. click [here](https://github.com/AudreyCherrie/pitch/blob/master/LICENSE) for more details
