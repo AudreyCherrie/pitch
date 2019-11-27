@@ -38,3 +38,9 @@ Db
 * start the server `python3.x manage.py server`
 
 ## Development tools
+* [Python](https://www.python.org/)
+* [Flask](https://palletsprojects.com/p/flask/)
+* [Material](https://material.io/)
+* [Google fonts](https://fonts.google.com/)
+* HTML
+* CSS
