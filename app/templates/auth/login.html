@@ -1,24 +1,36 @@
-{% extends 'base.html'%}
-{% import 'bootstrap/wtf.html' as wtf%}
+{% extends 'base.html' %}
+{% from "render_elements.html" import render_textfield, render_submitfield %}
 
 {% block content %}
-<div class="container"> 
-    <div class="row">
-      <div class= "col-md-2"> </div>
-      <div class="col-md-8">
-      <!--Flash message -->
-      {% for message in get_flashed_messages() %}
-        <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
+  <div style="height: 64px;"></div>
+  <div class="cstm-container cstm-flex-column cstm-align-items-center">
+    <div class="cstm-general-container-content cstm-flex-column cstm-text-center">
+      <h2 class="mdc-typography--headline2 cstm-gutterbottom-3 cstm-login-h2">Welcome back! 😊</h2>
+      <p class="mdc-typography--body1">We missed you</p>
+      <form action="" method="post" class="form" role="form">
+        {{ form.csrf_token }}
+        {{ render_textfield(form.email, class='mdc-text-field__input cstm-fullwidth') }}
+        {{ render_textfield(form.password, class='mdc-text-field__input cstm-fullwidth') }}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <p class="mdc-typography--body1" style="color: red;">{{ messages[0] }}</p>
+          {% endif %}
+        {% endwith %}
+        <div class="cstm-form-actions">
+          {{ render_submitfield(form.submit, class='mdc-button mdc-button--raised') }}
         </div>
-      {% endfor %}
-      <!-- Login form -->
-      {{wtf.quick_form(login_form)}}
-      <p> Don't have an account? <a href="{{url_for('auth.register')}}">Sign up here</a></p>
-     </div>
-     <div clas="col-md-2"> </div>
+      </form>
+      <p class="mdc-typography--body1 cstm-login-register-redirect">You don't have an account? <a href="/authenticate/register">sign up</a>.</p>
     </div>
-</div>
-
-{% endblock%}
+  </div>
+  <script>
+    const textFieldElements = [].slice.call(document.querySelectorAll('.mdc-text-field'));
+    textFieldElements.forEach((textFieldEl) => {
+      mdc.textField.MDCTextField.attachTo(textFieldEl);
+    });
+    const helperTextElements = [].slice.call(document.querySelectorAll('.mdc-text-field-helper-text'));
+    helperTextElements.forEach((helperTextEl) => {
+      mdc.textField.MDCTextFieldHelperText.attachTo(helperTextEl);
+    })
+  </script>
+{% endblock %}

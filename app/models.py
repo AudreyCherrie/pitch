@@ -30,9 +30,21 @@ class User(UserMixin,db.Model):
     def __repr__(self):
         return f'User {self.username}'
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+class PitchCategory(db.Model):
+  '''
+  map to pitch_categories table in database
+
+  Args:
+    db.Model: class from which sqlAlchemy properties are inherited
+  '''
+  __tablename__ = 'pitch_categories'
+  id = db.Column(db.Integer, primary_key=True)
+  category = db.Column(db.String(255), nullable=False)
+  pitches = db.relationship('Pitch', backref='pitch_collection', lazy='dynamic')
 
 class Pitch(db.Model):
   '''
@@ -45,7 +57,7 @@ class Pitch(db.Model):
   __tablename__ = 'pitch_collection'
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(255), nullable=False)
-  body = db.Column(db.String(), nullable=False)
+  body = db.Column(db.String(255), nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   category_id = db.Column(db.Integer, db.ForeignKey('pitch_categories.id'), nullable=False)
 
@@ -58,11 +70,11 @@ class Pitch(db.Model):
 
 #     return pitch
 
-@classmethod
-def get_user_pitch (cls,uname):
-    pitch = Pitch.query.filter_by(user = uname ).all()
+  @classmethod
+  def get_user_pitch (cls,uname):
+      pitch = Pitch.query.filter_by(user = uname ).all()
 
-    return pitch
+      return pitch
 class PitchVote(db.Model):
   '''
   maps to pitch_votes table in database
@@ -89,7 +101,7 @@ class PitchComment(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   pitch_id = db.Column(db.Integer, db.ForeignKey('pitch_collection.id'), nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  comment = db.Column(db.String(), nullable=False)
+  comment = db.Column(db.String(255), nullable=False)
 
 # class Review(db.Model):
 #     __tablename__ = 'reviews'

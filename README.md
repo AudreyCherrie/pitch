@@ -46,4 +46,4 @@ Db
 * CSS
 
 ## license
-This project is under the MIT license. click [here](https://github.com/AudreyCherrie/pitch/blob/master/LICENSE) for more details
+This project is under the MIT license. click [here](https://github.com/AudreyCherrie/pitch.LICENSE) for more details
