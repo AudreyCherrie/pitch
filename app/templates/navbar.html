@@ -1,8 +1,23 @@
-<ul class="nav navbar-nav navbar-right">
-    {% if current_user.is_authenticated %}
-    <li style="color:white;padding:15px;">{{current_user.username}}</li>
-    <li><a href="{{url_for('auth.logout')}}">Sign out</a></li>
-    {% else %}
-    <li><a href="{{url_for('auth.login')}}">Sign in</a></li>
-    {%endif%}
-  </ul>
+<header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+        <span class="mdc-top-app-bar__title">
+          <a href="/" style="text-decoration: none; color: white;">One Minute Pitch</a>
+        </span>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+        {% if current_user.is_authenticated %}
+          <a href="/user/{{ current_user.id }}" class="mdc-button mdc-button--unelevated">
+            <i class="material-icons mdc-button__icon" aria-hidden="true">person</i>
+            <span class="mdc-button__label">{{ current_user.name }}</span>
+          </a>
+          <a href="/authenticate/logout" class="mdc-button mdc-button--unelevated">logout</a>
+        {% else %}
+          <a href="/authenticate/login" class="mdc-button mdc-button--unelevated">login</a>
+          <a href="/authenticate/register" class="mdc-button mdc-button--unelevated">register</a>
+        {% endif %}
+      </section>
+    </div>
+  </header>
+  
