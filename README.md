@@ -27,3 +27,12 @@ Db
 * 
 * initiate database the database `python3.6 manage.py db upgrade`
 * then start the server `python manage.py server`
+
+#### unix
+
+* In the root directory, create a virtual environment by opening command prompt or powershell and entering in `python3.x -m venv --without-pip virtual` replace x with version in host machine, preferably version v3.6 for this project
+* Activate the virtual environment `source virtual/bin/activate`
+* Download pip into the virtual environment `curl https://bootstrap.pypa.io/get-pip.py | python`
+* Install packages. `pip install -r requirements.txt`>`
+* initiate database the database `python3.6 manage.py db upgrade`
+* start the server `python3.x manage.py server`
