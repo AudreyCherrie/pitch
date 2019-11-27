@@ -6,43 +6,73 @@ from .. import db
 from flask_login import login_user,logout_user,login_required
 from ..emails import mail_message
 from . import auth
+from werkzeug.security import generate_password_hash, check_password_hash
 
 #auth = Blueprint('auth',__name__)
 
 
-@auth.route('/register',methods = ["GET","POST"])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(email = form.email.data, username = form.username.data,password = form.password.data)
-        db.session.add(user)
-
-        db.session.commit()
-        mail_message("Welcome to pitch","email/welcome_user",user.email,user=user)
-
-        return redirect(url_for('auth.login'))
-        title = "New Account"
-    return render_template('auth/register.html',registration_form = form)
-
-
-@auth.route('/login',methods=['GET','POST'])
+@auth.route('/login')
 def login():
-    login_form = LoginForm()
-    if login_form.validate_on_submit():
-        user = User.query.filter_by(email = login_form.email.data).first()
-        if user is not None and user.verify_password(login_form.password.data):
-            login_user(user,login_form.remember.data)
-            return redirect(request.args.get('next') or url_for('main.index'))
+  form = LoginForm()
 
-        flash('Invalid username or Password')
+  return render_template('auth/login.html', form=form)
 
-    title = "pitch login"
-    return render_template('auth/login.html',login_form = login_form,title=title)    
+@auth.route('/login', methods=['POST'])
+def login_post():
+  form = LoginForm()
 
+  email = request.form.get('email')
+  password = request.form.get('password')
+  print(email)
+  print(password)
+
+  user = User.query.filter_by(email=email).first()
+
+  if not user or not check_password_hash(user.password_secure, password):
+    flash('please check your login details and try again')
+
+    return render_template('auth/login.html', form=form)
+
+  login_user(user, remember=True)
+
+  return redirect(url_for('main.index'))
+
+@auth.route('/register')
+def register():
+  form = RegistrationForm()
+
+  return render_template('auth/register.html', form=form)
+
+@auth.route('/register', methods = ['POST'])
+def register_post():
+  loginForm = LoginForm()
+  registerForm = RegistrationForm()
+
+  name = request.form.get('name')
+  email = request.form.get('email')
+  password = request.form.get('password')
+  password_confirm = request.form.get('password_confirm')
+
+  user = User.query.filter_by(email=email).first()
+
+  if user:
+    flash('Email address already exists')
+    return render_template('auth/register.html', form=registerForm)
+
+  if password != password_confirm:
+    flash('Passwords don\'t match')
+    return render_template('auth/register.html', form=registerForm)
+
+  new_user = User(name=name, email=email, password_secure=generate_password_hash(password, method='sha256'))
+  db.session.add(new_user)
+  db.session.commit()
+
+  login_user(new_user, remember=True)
+  
+  return redirect(url_for('main.index'))
 
 @auth.route('/logout')
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for("main.index"))
-from . import views
+  logout_user()
+  return redirect(url_for('main.index'))
