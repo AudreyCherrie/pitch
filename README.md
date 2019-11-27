@@ -36,3 +36,5 @@ Db
 * Install packages. `pip install -r requirements.txt`>`
 * initiate database the database `python3.6 manage.py db upgrade`
 * start the server `python3.x manage.py server`
+
+## Development tools
